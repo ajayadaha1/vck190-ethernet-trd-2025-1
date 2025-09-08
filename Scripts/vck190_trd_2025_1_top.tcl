@@ -46,9 +46,11 @@ if [file exists ${impl_const}] {
     add_files -fileset constrs_1 -norecurse ./${impl_const}
     set_property used_in_synthesis true [get_files ./${impl_const}]
 }
-make_wrapper -files [get_files ${proj_dir}/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd] -top
-after 3000
-add_files -norecurse  ${proj_dir}/${project_name}.srcs/sources_1/bd/${project_name}/${project_name}.bd
+make_wrapper -files [get_files ${proj_dir}/vck190_ethernet_trd_2025_1.srcs/sources_1/bd/vck190_ethernet_trd_2025_1/vck190_ethernet_trd_2025_1.bd] -top
+after 1000
+add_files -norecurse ${proj_dir}/vck190_ethernet_trd_2025_1.gen/sources_1/bd/vck190_ethernet_trd_2025_1/hdl/vck190_ethernet_trd_2025_1_wrapper.v
+
+
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
