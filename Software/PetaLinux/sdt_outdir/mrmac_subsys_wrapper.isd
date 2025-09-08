@@ -1,0 +1,13 @@
+{
+  "spec_file_version": 4,
+  "info": {
+    "device_name": "vc1902",
+    "format": "deep"
+  },
+  "flags": {},
+  "modules": {},
+  "design": {
+    "name": "mrmac_subsys_wrapper_0",
+    "base_protection": {}
+  }
+}
