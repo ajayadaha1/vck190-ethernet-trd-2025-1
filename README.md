@@ -163,7 +163,7 @@ Connecting to host 192.168.3.1, port 5201
 iperf Done.
 ```
 
-###ptp4l
+### ptp4l :
 **NOTE:** When testing on board-to-board setup with two same boards running same Petalinux image with local HW addr coming from Device Tree, it's important to change the HW addr on one side before running ptp4l application.
 ```
 Petalinux25:/home/petalinux# ifconfig eth0 down
