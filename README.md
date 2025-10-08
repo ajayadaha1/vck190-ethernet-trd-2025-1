@@ -22,8 +22,21 @@ The Vivado project will be built in the `Hardware` directory.
 ### **PetaLinux:**
 
 Enter the 'Software/PetaLinux/' directory. From the command line run the following:
-#TODO Add SDT flow
-`petalinux-config --get-hw-description ../../Hardware/prebuilt/ --silentconfig`
+1. Create a sdt.tcl file:
+   ```
+   # sdt.tcl
+   set xsa [lindex $argv 0]
+   set outdir [lindex $argv 1]
+   exec rm -rf $outdir
+   sdtgen set_dt_param -xsa $xsa -dir $outdir -board_dts versal-vck190-reva-x-ebm-01-reva
+   sdtgen generate_sdt
+   ``` 
+2. Create a output directory; for example sdt_outdir
+3. Run xsct to generate hw description for Petalinux
+   ```
+   xsct sdt.tcl design1_wrapper.xsa sdt_outdir
+   ```
+4.`petalinux-config --get-hw-description <PATH_TO_SDT_OUTDIR> --silentconfig`
 
 followed by:
 
@@ -50,8 +63,8 @@ Once packaged, the `boot.scr`, `BOOT.bin` and `image.ub` files (in the PetaLinux
 - eth1 -> 25G
 - eth2 -> 25G
 - eth3 -> 25G
-- eth4 -> 1G (PS-GEM)
-- eth5 -> 1G (PS-GEM)
+- end0 -> 1G (PS-GEM)
+- end1 -> 1G (PS-GEM)
 
 
 
@@ -150,5 +163,50 @@ Connecting to host 192.168.3.1, port 5201
 iperf Done.
 ```
 
+###ptp4l
+**NOTE:** When testing on board-to-board setup with two same boards running same Petalinux image with local HW addr coming from Device Tree, it's important to change the HW addr on one side before running ptp4l application.
+```
+Petalinux25:/home/petalinux# ifconfig eth0 down
+Petalinux25:/home/petalinux# ifconfig eth0 hw ether 00:0A:35:00:00:01
+Petalinux25:/home/petalinux# ifconfig eth0 up
+```
+Master side:
+```
+Petalinux25:/home/petalinux# ptp4l -i eth0 -m                  
+ptp4l[3865.357]: selected /dev/ptp1 as PTP clock
+ptp4l[3865.358]: port 1 (eth0): INITIALIZING to LISTENING on INIT_COMPLETE
+ptp4l[3865.358]: port 0 (/var/run/ptp4l): INITIALIZING to LISTENING on INIT_COMP
+ptp4l[3865.358]: port 0 (/var/run/ptp4lro): INITIALIZING to LISTENING on INIT_CO
+ptp4l[3872.424]: port 1 (eth0): LISTENING to MASTER on ANNOUNCE_RECEIPT_TIMEOUT_EXPIRES
+ptp4l[3872.424]: selected local clock 000a35.fffe.000001 as best master
+ptp4l[3872.424]: port 1 (eth0): assuming the grand master role
+```
+Slave side:
+```
+Petalinux25:/home/petalinux#  ptp4l -i eth0 -m -s                  
+ptp4l[3868.202]: selected /dev/ptp1 as PTP clock
+ptp4l[3868.203]: port 1 (eth0): INITIALIZING to LISTENING on INIT_COMPLETE
+ptp4l[3868.203]: port 0 (/var/run/ptp4l): INITIALIZING to LISTENING on INIT_COMPLETE
+ptp4l[3868.203]: port 0 (/var/run/ptp4lro): INITIALIZING to LISTENING on INIT_COMPLETE
+ptp4l[3868.493]: port 1 (eth0): new foreign master 000a35.fffe.000001-1
+ptp4l[3872.493]: selected best master clock 000a35.fffe.000001
+ptp4l[3872.493]: port 1 (eth0): LISTENING to UNCALIBRATED on RS_SLAVE
+ptp4l[3874.492]: master offset      -2413 s0 freq    +127 path delay        86
+ptp4l[3875.492]: master offset      -2413 s2 freq    +127 path delay        87
+ptp4l[3875.492]: port 1 (eth0): UNCALIBRATED to SLAVE on MASTER_CLOCK_SELECTED
+ptp4l[3876.492]: master offset      -2411 s2 freq   -2284 path delay        87
+ptp4l[3877.492]: master offset          4 s2 freq    -592 path delay        86
+ptp4l[3878.492]: master offset        724 s2 freq    +129 path delay        86
+ptp4l[3879.492]: master offset        725 s2 freq    +347 path delay        86
+ptp4l[3880.492]: master offset        506 s2 freq    +346 path delay        87
+ptp4l[3881.492]: master offset        289 s2 freq    +280 path delay        87
+ptp4l[3882.492]: master offset        137 s2 freq    +215 path delay        88
+ptp4l[3883.492]: master offset         50 s2 freq    +169 path delay        88
+ptp4l[3884.492]: master offset          4 s2 freq    +138 path delay        94
+ptp4l[3885.492]: master offset         -6 s2 freq    +129 path delay        94
+ptp4l[3886.492]: master offset         -8 s2 freq    +126 path delay        94
+ptp4l[3887.492]: master offset         -5 s2 freq    +126 path delay        94
+ptp4l[3888.492]: master offset         -4 s2 freq    +126 path delay        94
+```
 ### Known Issues
  
