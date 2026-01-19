@@ -1,0 +1,54 @@
+# PetaLinux Build Artifacts - DO NOT COMMIT
+# ==========================================
+
+# Build directories
+tmp/
+cache/
+sstate-cache/
+build/
+work/
+deploy/
+downloads/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Backup files
+*.orig
+*.bak
+*~
+.*.swp
+.*.swo
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Log files
+*.log
+
+# Generated configuration files (often auto-generated)
+conf/bblayers.conf.orig
+
+# Duplicate nested directories (prevent re-copying project-spec content into meta-user)
+# These should NEVER be in meta-user:
+configs/
+dts_dir/
+hw-description/
+meta-user/
+
+# Only linux/ should be in recipes-kernel, not entire project-spec
+recipes-kernel/conf/
+recipes-kernel/configs/
+recipes-kernel/dts_dir/
+recipes-kernel/hw-description/
+recipes-kernel/meta-user/
+recipes-kernel/meta-xilinx-tools/
+recipes-kernel/recipes-apps/
+recipes-kernel/recipes-bsp/
+recipes-kernel/recipes-kernel/

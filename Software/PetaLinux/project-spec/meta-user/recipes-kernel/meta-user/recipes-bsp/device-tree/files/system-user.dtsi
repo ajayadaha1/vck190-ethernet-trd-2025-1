@@ -1,9 +1,0 @@
-/include/ "system-conf.dtsi"
-/ {
-};
-
-&amba {
-        zyxclmm_drm {
-                compatible = "xlnx,zocl-versal";
-        };
-};
